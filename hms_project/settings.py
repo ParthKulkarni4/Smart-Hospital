@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'doctor',
     'appointments',
     'billing',
+    'bloodbank'
 ]
 
 AUTH_USER_MODEL = 'accounts.User'

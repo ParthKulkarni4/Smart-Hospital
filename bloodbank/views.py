@@ -16,11 +16,14 @@ from .serializers import DonorSerializer, BloodInventorySerializer, BloodIssueSe
 from .permissions import IsBloodBankStaff
 from rest_framework.permissions import IsAuthenticated
 from decimal import Decimal
+from rest_framework.permissions import AllowAny
+
 
 class DonorViewSet(viewsets.ModelViewSet):
     queryset = Donor.objects.all().order_by('-created_at')
     serializer_class = DonorSerializer
     permission_classes = [IsAuthenticated, IsBloodBankStaff]
+    # permission_classes = [AllowAny]
 
 
 class BloodInventoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -31,6 +34,7 @@ class BloodInventoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = BloodInventory.objects.all()
     serializer_class = BloodInventorySerializer
     permission_classes = [IsAuthenticated, IsBloodBankStaff]
+    # permission_classes = [AllowAny]
 
     @action(detail=True, methods=['put'], url_path='adjust', url_name='adjust')
     def adjust(self, request, pk=None):
@@ -55,7 +59,13 @@ class BloodInventoryViewSet(viewsets.ReadOnlyModelViewSet):
 
 class IssueBloodAPIView(APIView):
     permission_classes = [IsAuthenticated, IsBloodBankStaff]
+    # permission_classes = [AllowAny]
 
+    def get(self, request):
+        """Return list of all issued blood records."""
+        issues = BloodIssue.objects.all().order_by('-id')
+        serializer = BloodIssueSerializer(issues, many=True)
+        return Response(serializer.data, status=200)
     @transaction.atomic
     def post(self, request):
         """
@@ -86,6 +96,7 @@ class IssueBloodAPIView(APIView):
 
 class UsageReportAPIView(APIView):
     permission_classes = [IsAuthenticated, IsBloodBankStaff]
+    # permission_classes = [AllowAny]
 
     def get(self, request):
         """
@@ -100,7 +111,8 @@ class UsageReportAPIView(APIView):
 
 
 class SummaryReportAPIView(APIView):
-    permission_classes = [IsAuthenticated, IsBloodBankStaff]
+    # permission_classes = [IsAuthenticated, IsBloodBankStaff]
+    permission_classes = [AllowAny]
 
     def get(self, request):
         total_donors = Donor.objects.count()

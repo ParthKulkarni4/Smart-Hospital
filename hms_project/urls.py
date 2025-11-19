@@ -31,4 +31,5 @@ urlpatterns = [
     path('api/doctor', include('doctor.urls')),  # This makes /api/doctors/ available
     path('api/appointments', include('appointments.urls')),  # This makes /api/appointments/ available
     path('api/billing', include('billing.urls')),  # This makes /api/billing/ available
-]
+    path('api/bloodbank', include('bloodbank.urls')),
+]   

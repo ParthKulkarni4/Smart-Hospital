@@ -11,7 +11,7 @@ class BloodUnit(models.Model):
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
-from patients.models import Patient
+from patient.models import Patient
 
 # Blood group choices
 BLOOD_GROUP_CHOICES = [
@@ -62,7 +62,7 @@ class BloodInventory(models.Model):
 
 class BloodIssue(models.Model):
     # assume a Patient model exists in some app named 'patients'
-    patient = models.ForeignKey('patients.Patient', on_delete=models.PROTECT, related_name='blood_issues')
+    patient = models.ForeignKey('patient.Patient', on_delete=models.PROTECT, related_name='blood_issues')
     blood_group = models.CharField(max_length=3, choices=BLOOD_GROUP_CHOICES)
     units_issued = models.DecimalField(max_digits=6, decimal_places=2)
     issue_date = models.DateTimeField(default=timezone.now)
@@ -77,8 +77,7 @@ class BloodIssue(models.Model):
 
 class BloodRequest(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    quantity_ml = models
-    .PositiveIntegerField()
+    quantity_ml = models.PositiveIntegerField()
     status = models.CharField(
         max_length=20,
         choices=[("Pending", "Pending"), ("Approved", "Approved"), ("Rejected", "Rejected"), ("Completed", "Completed")],
