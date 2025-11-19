@@ -16,7 +16,7 @@ from .serializers import DonorSerializer, BloodInventorySerializer, BloodIssueSe
 from .permissions import IsBloodBankStaff
 from rest_framework.permissions import IsAuthenticated
 from decimal import Decimal
-from rest_framework.permissions import AllowAny
+# from rest_framework.permissions import AllowAny
 
 
 class DonorViewSet(viewsets.ModelViewSet):
