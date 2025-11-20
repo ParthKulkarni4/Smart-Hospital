@@ -111,8 +111,8 @@ class UsageReportAPIView(APIView):
 
 
 class SummaryReportAPIView(APIView):
-    # permission_classes = [IsAuthenticated, IsBloodBankStaff]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated, IsBloodBankStaff]
+    # permission_classes = [AllowAny]
 
     def get(self, request):
         total_donors = Donor.objects.count()
