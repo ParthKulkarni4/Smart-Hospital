@@ -30,8 +30,17 @@ class Patient(models.Model):
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     phone_number = models.CharField(max_length=15, unique=True)
+    phone_secondary = models.CharField(max_length=15, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
-    
+
+    # Emergency Contact
+    emergency_contact_name = models.CharField(max_length=150, blank=True, null=True)
+    emergency_contact_phone = models.CharField(max_length=15, blank=True, null=True)
+
+    # Insurance Information
+    insurance_provider = models.CharField(max_length=150, blank=True, null=True)
+    insurance_number = models.CharField(max_length=100, blank=True, null=True)
+
     # Medical Information
     blood_group = models.CharField(max_length=5, blank=True, null=True)
     
