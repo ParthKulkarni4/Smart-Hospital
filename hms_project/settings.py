@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'doctor',
     'appointments',
     'billing',
+    'radiology', 
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -111,6 +112,7 @@ TENANT_APPS = (
     'doctor',
     'appointments'
     'billing',
+     'radiology', 
     # We will add 'doctor', 'appointment', 'billing', 'emr', etc. here
 )
 SHARED_APPS = (
