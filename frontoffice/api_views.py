@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from datetime import date, timedelta
 
-from doctor.models import DoctorProfile
+from doctor.models import Doctor
 from patient.models import Patient
 from appointments.models import Appointment
 from billing.models import Bill
@@ -64,7 +64,7 @@ def receptionist_dashboard(request):
     total_pharmacy_orders = 0  
     # total_pathology_tests = PathologyReport.objects.count() 
     # total_radiology_tests = RadiologyReport.objects.count()  
-    total_doctors = DoctorProfile.objects.count() 
+    total_doctors = Doctor.objects.count() 
     
 
     # apointments in last 7  Days

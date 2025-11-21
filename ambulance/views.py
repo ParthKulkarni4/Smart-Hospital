@@ -3,13 +3,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
-from .models import Ambulance, AmbulanceTrip
+from .models import Ambulance, AmbulanceCall
 from patient.models import Patient
 
 @login_required
 def index(request):
     ambulances = Ambulance.objects.all()
-    trips = AmbulanceTrip.objects.select_related('ambulance', 'patient', 'booked_by').all()
+    trips = AmbulanceCall.objects.select_related('ambulance', 'patient', 'booked_by').all()
     patients = Patient.objects.select_related('user').all()
     return render(request, 'ambulance/index.html', {
         'ambulances': ambulances,
@@ -19,7 +19,7 @@ def index(request):
 
 @login_required
 def trips(request):
-    trips = AmbulanceTrip.objects.select_related('ambulance', 'patient', 'booked_by').all()
+    trips = AmbulanceCall.objects.select_related('ambulance', 'patient', 'booked_by').all()
     return render(request, 'ambulance/trips.html', {'trips': trips})
 
 @login_required
@@ -39,7 +39,7 @@ def create_trip(request):
                 return redirect('ambulance_index')
 
             # Create trip
-            trip = AmbulanceTrip.objects.create(
+            trip = AmbulanceCall.objects.create(
                 patient=patient,
                 ambulance=ambulance,
                 start_time=start_time,

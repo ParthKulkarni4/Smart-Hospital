@@ -1,17 +1,16 @@
 from django.contrib import admin
-# Register models here
-from .models import Ambulance, AmbulanceTrip
+from .models import Ambulance, AmbulanceCall
 
 
 @admin.register(Ambulance)
 class AmbulanceAdmin(admin.ModelAdmin):
-    list_display = ('vehicle_no', 'driver_name', 'contact','status')
-    list_filter = ()
-    search_fields = ('vehicle_no', 'driver_name')
+    list_display = ("vehicle_number", "driver_name", "driver_phone", "status", "current_lat", "current_long")
+    search_fields = ("vehicle_number", "driver_name")
+    list_filter = ("status",)
 
-@admin.register(AmbulanceTrip)
-class AmbulanceTripAdmin(admin.ModelAdmin):
-    list_display = ('ambulance', 'patient', 'start_time', 'end_time','status','booked_by')
-    list_filter = ()
-    search_fields = ('ambulance__vehicle_no', 'patient__user__first_name', 'patient__user__last_name')
-    readonly_fields = ('booked_by',)
+
+@admin.register(AmbulanceCall)
+class AmbulanceCallAdmin(admin.ModelAdmin):
+    list_display = ("patient", "ambulance", "status", "created_at", "completed_at")
+    search_fields = ("patient__user__first_name", "ambulance__vehicle_number")
+    list_filter = ("status", "created_at")
