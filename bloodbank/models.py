@@ -1,92 +1,128 @@
-from django.db import models
-class BloodUnit(models.Model):
-    blood_group = models.CharField(max_length=5)
-    units = models.IntegerField(default=0)
-    last_updated = models.DateTimeField(auto_now=True)
-    def __str__(self): return f"{self.blood_group} - {self.units} units"
-
-# -------------------------------------------
-
 # bloodbank/models.py
+
 from django.db import models
-from django.conf import settings
-from django.utils import timezone
+
 from patient.models import Patient
 
-# Blood group choices
-BLOOD_GROUP_CHOICES = [
-    ("A+", "A+"), ("A-", "A-"),
-    ("B+", "B+"), ("B-", "B-"),
-    ("AB+", "AB+"), ("AB-", "AB-"),
-    ("O+", "O+"), ("O-", "O-"),
-]
+from doctor.models import Doctor
+ 
+class BloodDonor(models.Model):
 
-GENDER_CHOICES = [
-    ("male", "Male"),
-    ("female", "Female"),
-    ("other", "Other"),
-]
+    GENDER_CHOICES = [('M', 'Male'), ('F', 'Female'), ('O', 'Other')]
 
-AGE_CHOICES = [(i, i) for i in range(18, 80)] 
+    BLOOD_GROUPS = [
 
-class Donor(models.Model):
-    name = models.CharField(max_length=255)
-    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
-    age = models.IntegerField(choices=AGE_CHOICES)
-    blood_group = models.CharField(max_length=3, choices=BLOOD_GROUP_CHOICES)
-    phone = models.CharField(max_length=10,blank=True)
-    address = models.TextField(blank=True)
+        ('A+', 'A+'), ('A-', 'A-'),
+
+        ('B+', 'B+'), ('B-', 'B-'),
+
+        ('AB+', 'AB+'), ('AB-', 'AB-'),
+
+        ('O+', 'O+'), ('O-', 'O-'),
+
+    ]
+ 
+    name = models.CharField(max_length=150)
+
+    age = models.PositiveIntegerField()
+
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+
+    blood_group = models.CharField(max_length=5, choices=BLOOD_GROUPS)
+
+    phone_number = models.CharField(max_length=15)
+
     last_donation_date = models.DateField(null=True, blank=True)
-    email = models.EmailField(blank=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True) 
 
     def __str__(self):
+
         return f"{self.name} ({self.blood_group})"
+ 
+class BloodBag(models.Model):
 
+    """The Inventory Item"""
 
-class BloodInventory(models.Model):
-    blood_group = models.CharField(max_length=3, choices=BLOOD_GROUP_CHOICES, unique=True)
-    units = models.DecimalField(max_digits=8, decimal_places=2, default=0)  # units can be fractional if needed
+    COMPONENT_CHOICES = [
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+        ('Whole Blood', 'Whole Blood'),
 
-    class Meta:
-        ordering = ['blood_group']
+        ('Plasma', 'Plasma'),
 
+        ('Platelets', 'Platelets'),
+
+    ]
+
+    STATUS_CHOICES = [
+
+        ('Available', 'Available'),
+
+        ('Reserved', 'Reserved'),
+
+        ('Issued', 'Issued'),
+
+        ('Expired', 'Expired'),
+
+    ]
+ 
+    donor = models.ForeignKey(BloodDonor, on_delete=models.SET_NULL, null=True)
+
+    bag_number = models.CharField(max_length=50, unique=True) # Physical barcode ID
+
+    blood_group = models.CharField(max_length=5, choices=BloodDonor.BLOOD_GROUPS)
+
+    component_type = models.CharField(max_length=20, choices=COMPONENT_CHOICES, default='Whole Blood')
+
+    volume_ml = models.PositiveIntegerField(default=350)
+
+    collection_date = models.DateField()
+
+    expiry_date = models.DateField()
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Available')
+ 
     def __str__(self):
-        return f"{self.blood_group}: {self.units} units"
 
-
-class BloodIssue(models.Model):
-    # assume a Patient model exists in some app named 'patients'
-    patient = models.ForeignKey('patient.Patient', on_delete=models.PROTECT, related_name='blood_issues')
-    blood_group = models.CharField(max_length=3, choices=BLOOD_GROUP_CHOICES)
-    units_issued = models.DecimalField(max_digits=6, decimal_places=2)
-    issue_date = models.DateTimeField(default=timezone.now)
-    issued_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
-    bill_no = models.CharField(max_length=50, blank=True)
-    remarks = models.TextField(blank=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Issue {self.id} - {self.patient} - {self.blood_group} ({self.units_issued})"
-
+        return f"{self.bag_number} - {self.blood_group} ({self.status})"
+ 
 class BloodRequest(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    quantity_ml = models.PositiveIntegerField()
-    status = models.CharField(
-        max_length=20,
-        choices=[("Pending", "Pending"), ("Approved", "Approved"), ("Rejected", "Rejected"), ("Completed", "Completed")],
-        default="Pending"
-    )
-    request_date = models.DateTimeField(default=timezone.now)
-    approval_date = models.DateTimeField(null=True, blank=True)
 
+    """The Transaction"""
+
+    STATUS_CHOICES = [
+
+        ('Requested', 'Requested'),
+
+        ('Approved', 'Approved'),
+
+        ('Issued', 'Issued'),
+
+        ('Rejected', 'Rejected'),
+
+    ]
+ 
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='blood_requests')
+
+    doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True)
+
+    required_blood_group = models.CharField(max_length=5, choices=BloodDonor.BLOOD_GROUPS)
+
+    required_component = models.CharField(max_length=20, choices=BloodBag.COMPONENT_CHOICES)
+
+    units_required = models.PositiveIntegerField(default=1)
+
+    request_date = models.DateTimeField(auto_now_add=True)
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Requested')
+
+    # When issued, we link to the specific bag(s). 
+
+    # Since one request might need multiple bags, a ManyToMany is safer, 
+
+    # but for simplicity here, we'll assume 1 request = 1 bag issuance or handle via logic.
+
+    issued_bag = models.OneToOneField(BloodBag, on_delete=models.SET_NULL, null=True, blank=True)
+ 
     def __str__(self):
-        return f"Request #{self.id} - {self.patient.name}"
 
-medical_issues = models.BooleanField(default=False)
+        return f"Req for {self.patient}: {self.required_blood_group}"
+
