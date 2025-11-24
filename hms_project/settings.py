@@ -49,8 +49,12 @@ INSTALLED_APPS = [
     'doctor',
     'appointments',
     'billing',
+    'bloodbank',
     'ambulance',
-    'frontoffice',
+    'frontoffice'
+
+
+    
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -111,7 +115,7 @@ DATABASES = {
 TENANT_APPS = (
     'patient',
     'doctor',
-    'appointments'
+    'appointments',
     'billing',
     # We will add 'doctor', 'appointment', 'billing', 'emr', etc. here
 )
