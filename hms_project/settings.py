@@ -49,7 +49,12 @@ INSTALLED_APPS = [
     'doctor',
     'appointments',
     'billing',
-    'bloodbank'
+    'bloodbank',
+    'ambulance',
+    'frontoffice'
+
+
+    
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -110,7 +115,7 @@ DATABASES = {
 TENANT_APPS = (
     'patient',
     'doctor',
-    'appointments'
+    'appointments',
     'billing',
     # We will add 'doctor', 'appointment', 'billing', 'emr', etc. here
 )
@@ -164,3 +169,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
