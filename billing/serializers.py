@@ -11,7 +11,7 @@ class BillItemSerializer(serializers.ModelSerializer):
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        fields = ['id', 'amount', 'payment_date', 'payment_mode', 'remarks']
+        fields = ['id', 'amount', 'payment_date', 'payment_mode', 'bill','remarks']
 
 class BillSerializer(serializers.ModelSerializer):
     items = BillItemSerializer(many=True) # Nested items

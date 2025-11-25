@@ -60,6 +60,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False) # Required for Django admin
     date_joined = models.DateTimeField(auto_now_add=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
 
     objects = CustomUserManager()
 

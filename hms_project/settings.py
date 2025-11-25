@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'billing',
     'ambulance',
     'frontoffice',
+    'bloodbank',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'

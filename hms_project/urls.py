@@ -33,4 +33,5 @@ urlpatterns = [
     path('api/billing', include('billing.urls')),  # This makes /api/billing/ available
     path('api/ambulance', include('ambulance.api_urls')),  # This makes /api/ambulance/ available
     path('api/frontoffice/', include('frontoffice.api_urls')),  # This makes /api/frontoffice/ available
+    path('api/bloodbank/', include('bloodbank.urls')),  # This makes /api/bloodbank/ available
 ]
