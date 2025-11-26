@@ -14,7 +14,7 @@ class PaymentSerializer(serializers.ModelSerializer):
         fields = ['id', 'amount', 'payment_date', 'payment_mode', 'bill','remarks']
 
 class BillSerializer(serializers.ModelSerializer):
-    items = BillItemSerializer(many=True) # Nested items
+    items = BillItemSerializer(many=True,required=False) # Nested items    
     payments = PaymentSerializer(many=True, read_only=True) # View payments
     patient_details = PatientSerializer(source='patient', read_only=True)
 
