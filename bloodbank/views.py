@@ -68,7 +68,7 @@ class BloodRequestViewSet(viewsets.ModelViewSet):
 
             if issued_bag.status != 'Available':
 
-                raise serializers.ValidationError("Selected blood bag is not available.")
+                raise serializer.ValidationError("Selected blood bag is not available.")
 
             # 2. Update Bag Status
 

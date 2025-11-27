@@ -27,11 +27,16 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     # App Endpoints
-    path('api/patient', include('patient.urls')), # This makes /api/patients/ available
+    path('api/patient/', include('patient.urls')), # This makes /api/patients/ available
     path('api/doctor', include('doctor.urls')),  # This makes /api/doctors/ available
     path('api/appointments', include('appointments.urls')),  # This makes /api/appointments/ available
     path('api/billing', include('billing.urls')),  # This makes /api/billing/ available
     path('api/ambulance', include('ambulance.api_urls')),  # This makes /api/ambulance/ available
     path('api/frontoffice/', include('frontoffice.api_urls')),  # This makes /api/frontoffice/ available
     path('api/bloodbank/', include('bloodbank.urls')),  # This makes /api/bloodbank/ available
+
+    path('api/accounts/', include('accounts.urls')), # For User Registration and Management
+
 ]
+
+

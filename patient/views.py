@@ -1,7 +1,7 @@
 from django.shortcuts import render
 # patient/views.py
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from .models import Patient
 from .serializers import PatientSerializer
 
@@ -12,7 +12,8 @@ class PatientViewSet(viewsets.ModelViewSet):
     based on the request.user.admin_owner.
     """
     serializer_class = PatientSerializer
-    permission_classes = [IsAuthenticated] 
+    permission_classes = [IsAuthenticated]
+    # permission_classes = [AllowAny] 
 
     def get_queryset(self):
         # MAGIC HAPPENS HERE:
